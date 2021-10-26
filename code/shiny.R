@@ -90,5 +90,5 @@ server <- function(input, output) {
 }
 
 shinyApp(ui = ui, server = server, 
-         options = list(port=8080, host="0.0.0.0"))
+         options = list(port=8788, host="0.0.0.0"))
 
