@@ -14,11 +14,11 @@ The dataset has 2240 observations/rows, each row representing the data from a un
 
 To replicate the analysis shown here, you need to install Docker, a software which allows you to create "reproducible deployments." Once you have installed Docker, you can build a Docker image from the given Dockerfile by:
 	
-	> docker build - < Dockerfile -t project
+	docker build - < Dockerfile -t project
 
 Then you can run the container on Rstudio server by:
 
-	> docker run -v $(pwd):/home/rstudio -e PASSWORD=pw -p 8787:8787 -t project
+	docker run -v $(pwd):/home/rstudio -e PASSWORD=pw -p 8787:8787 -t project
 
 By typing "localhost:8787" in a browser and logging in using "rstudio" as the username and "pw" (or any other password you choose) as the password, you can access the Rstudio server.  
 
@@ -27,6 +27,6 @@ By typing "localhost:8787" in a browser and logging in using "rstudio" as the us
 
 You can start a shiny app within R Studio at the command line by:
 
-	> docker run -p 8788:8788 -p 8787:8787 -e PASSWORD=pw -v $(pwd)"/home/rstudio -t project
+	docker run -p 8788:8788 -p 8787:8787 -e PASSWORD=pw -v $(pwd)"/home/rstudio -t project
 
 
