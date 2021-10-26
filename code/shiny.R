@@ -4,7 +4,7 @@ library(plotly)
 
 #data cleaning
 # 24 NA's in the Income column of data
-data <- read.delim('source_data/marketing_campaign.csv', show_col_types = FALSE) %>% as_tibble()
+data <- read.delim('source_data/marketing_campaign.csv') %>% as_tibble()
 names(data) <- tolower(names(data))
 data <- data %>% filter(data$income < 666666, na.rm = TRUE)
 data$age <- 2014-data$year_birth #max value: 121
