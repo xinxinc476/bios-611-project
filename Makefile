@@ -18,4 +18,12 @@ derived_data/marketing_campaign_clean.csv:\
 figures/figure1.png:\
  derived_data/marketing_campaign_clean.csv\
  code/plot.R code/utils.R
-	Rscript code/plot.R 
+	Rscript code/plot.R
+
+# report
+report.pdf:\
+ derived_data/marketing_campaign_clean.csv\
+ figures/figure1.png\
+ report.Rmd
+	Rscript -e "rmarkdown::render('report.Rmd')"
+ 
