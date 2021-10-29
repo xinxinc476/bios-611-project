@@ -1,4 +1,6 @@
 library(tidyverse)
+source('code/utils.R')
+
 data <- read.delim('source_data/marketing_campaign.csv') %>% as_tibble()
 names(data) <- tolower(names(data))
 
@@ -29,4 +31,6 @@ data$education[which(data$education %in% c("2n Cycle", "Basic"))] = "Undergradua
 data$education[which(data$education %in% c("Graduation","Master", "PhD"))] = "Postgraduate"
 
 data <- data %>% select(-c(z_costcontact, z_revenue))
-write_csv(data, 'derived_data/country_indicators.csv')
+
+ensure_directory('derived_data')
+write_csv(data, 'derived_data/marketing_campaign_clean.csv')
