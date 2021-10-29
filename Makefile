@@ -1,8 +1,8 @@
 PHONY: clean
 
 clean: 
-	rm derived_data/*
-	rm figures/*
+	rm -f derived_data/*
+	rm -f figures/*
 
 # derived data
 # data cleaning:
