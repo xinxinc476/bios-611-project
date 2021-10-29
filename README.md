@@ -24,6 +24,13 @@ Then you can run the container on Rstudio server by:
 By typing "localhost:8787" on your browser and logging in using "rstudio" as the Username and "pw" (or any other password you choose) as the Password, you can access the Rstudio server.  
 
 
+### Make
+
+You can use Make to generate the final report by:
+
+	make report.pdf 
+
+
 ### RShiny
 
 You can start a shiny app within R Studio at the command line by:
