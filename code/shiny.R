@@ -11,7 +11,7 @@ data$age <- 2014-data$year_birth #max value: 121
 data <- data %>% filter(data$age < 100)
 
 data$dt_customer <- as.Date(data$dt_customer, format = "%d-%m-%Y")
-last_day <- as.Date("2014-12-31")
+last_day <- as.Date("2014-10-04")
 data$days_enrollment <- as.integer(last_day - data$dt_customer)
 
 data$num_childs <- data$kidhome + data$teenhome
