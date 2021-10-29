@@ -4,10 +4,18 @@ clean:
 	rm derived_data/*
 	rm figures/*
 
-#data cleaning:
-#remove NA values and unreasonable values in income and age
-#combine categories in education and marital status
+# derived data
+# data cleaning:
+# remove NA values and unreasonable values in income and age
+# combine categories in education and marital status
 derived_data/marketing_campaign_clean.csv:\
  source_data/marketing_campaign.csv\
  code/data_clean.R code/utils.R
-	Rscript code/data_clean.R 
+	Rscript code/data_clean.R
+
+# figures
+# Figure1: expenditure vs. income, education, marital status, and # of childs
+figures/figure1.png:\
+ derived_data/marketing_campaign_clean.csv\
+ code/plot.R code/utils.R
+	Rscript code/plot.R 
