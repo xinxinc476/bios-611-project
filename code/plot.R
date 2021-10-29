@@ -3,7 +3,7 @@ library(ggplot2)
 library(gridExtra)
 source('code/utils.R')
 
-data <- read_csv('derived_data/marketing_campaign_clean.csv')
+data <- read.csv('derived_data/marketing_campaign_clean.csv') %>% as_tibble()
 data$expenditure <- data$mntwines+data$mntfruits+data$mntmeatproducts+data$mntfishproducts+data$mntsweetproducts+data$mntgoldprods
 
 # expenditure vs. income
