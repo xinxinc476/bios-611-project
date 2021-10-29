@@ -2,20 +2,7 @@ library(shiny)
 library(tidyverse)
 library(plotly)
 
-#data cleaning
-# 24 NA's in the Income column of data
-data <- read.delim('source_data/marketing_campaign.csv') %>% as_tibble()
-names(data) <- tolower(names(data))
-data <- data %>% filter(data$income < 666666, na.rm = TRUE)
-data$age <- 2014-data$year_birth #max value: 121
-data <- data %>% filter(data$age < 100)
-
-data$dt_customer <- as.Date(data$dt_customer, format = "%d-%m-%Y")
-last_day <- as.Date("2014-10-04")
-data$days_enrollment <- as.integer(last_day - data$dt_customer)
-
-data$num_childs <- data$kidhome + data$teenhome
-data$has_child <- as.integer(data$num_childs > 0)
+data <- read.csv('derived_data/marketing_campaign_clean.csv') %>% as_tibble()
 data$expenditure <- data$mntwines+data$mntfruits+data$mntmeatproducts+data$mntfishproducts+data$mntsweetproducts+data$mntgoldprods
   
 data <- data %>% select(c(days_enrollment, income, expenditure))
