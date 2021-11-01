@@ -15,7 +15,7 @@ The dataset has 2240 observations/rows, each row representing the data from a un
 
 To replicate the analysis shown here, you need to install Docker, a software which allows you to create "reproducible deployments." Once you have installed Docker, you can build a Docker image and create a Docker container from the given Dockerfile by:
 	
-	docker build - < Dockerfile -t project
+	docker build . -t project
 
 Then you can run the container on Rstudio server by:
 
