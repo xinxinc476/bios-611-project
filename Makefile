@@ -3,6 +3,7 @@
 clean: 
 	rm -f derived_data/*
 	rm -f figures/*
+	rm -f report.pdf
 
 # derived data
 # data cleaning:
