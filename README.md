@@ -12,22 +12,23 @@ The dataset has 2240 observations/rows, each row representing the data from a un
 
 
 ### Docker
-
+           
 To replicate the analysis shown here, you need to install Docker, a software which allows you to create "reproducible deployments." Once you have installed Docker, you can build a Docker image and create a Docker container from the given Dockerfile by:
 	
 	docker build . -t project
 
 Then you can run the container on Rstudio server by:
 
-	docker run -v $(pwd):/home/rstudio -e PASSWORD=pw -p 8787:8787 -t project
+	docker run -v $(pwd):/home/rstudio/project -e PASSWORD=pw -p 8787:8787 -t project
 
 By typing "localhost:8787" on your browser and logging in using "rstudio" as the Username and "pw" (or any other password you choose) as the Password, you can access the Rstudio server.  
 
 
 ### Make
 
-You can use Make to generate the final report by:
+You can use Make to generate the final report by typing the following commands in the Rstudio terminal:
 
+	cd project	
 	make report.pdf 
 
 
