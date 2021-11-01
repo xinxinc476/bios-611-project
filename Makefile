@@ -1,4 +1,4 @@
-PHONY: clean
+.PHONY: clean
 
 clean: 
 	rm -f derived_data/*
