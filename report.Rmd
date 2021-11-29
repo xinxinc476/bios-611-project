@@ -21,16 +21,18 @@ data <- read.csv('derived_data/marketing_campaign_clean.csv') %>% as_tibble()
 data$expenditure <- data$mntwines+data$mntfruits+data$mntmeatproducts+data$mntfishproducts+data$mntsweetproducts+data$mntgoldprods
 ```
 
-# Initial Analysis
 
-I first sum the total amount of spending on fruits, meat, fish, sweet and gold reffered as expenditure, and examine how customers' expenditure varies by their education, income, and marital status. 
+# Introduction
 
-![](figures/figure1.png)
+In marketing, the Pareto principle (80/20 rule) indicates that $80 \%$ of profits come from $20 \%$ of customers, so it is essential for a company to identify its ideal customers and target them with more personalized products as well as marketing strategies. In this project, I first conduct a RFM (which stands for Recency, Frequency, Monetary value) analysis to categorize customers into different groups such as potential loyalist and customers at risk. Then I try to predict the total expenditures for each customer based on his/her age, income, education level, and etc. 
 
-In Figure 1, we can see that customers' expenditure roughly increases as their income increases, but there are some outliers at high income values. The expenditure of customers with undergraduate degree seems to be slightly lower than that of customers with postgraduate degree. Also, customers without any child have much higher expenditure than those who have childs, but customers' expenditure does not differ much by their marital status.  
+The dataset can be accessed through the following link: https://www.kaggle.com/imakash3011/customer-personality-analysis. There are 2240 observations/rows (2212 after some data cleaning procedures) and 29 variables/columns in the data. The variables consist of customers' demographic information, the amount spent on wines, fruits, and meat during 2012-2014, the number of purchases made through the company's website, a catalog, and in stores, etc. More detailed descriptions of the variables can be found using the same link above.
 
 
 # RFM Analysis
+
+RFM Analysis is often used to segment customers based on how recently a customer made a purchase (recency), how often a customer makes a purchase (frequency), and how much money a customer has spent on purchases (monetary value).   
+
 
 ```{r}
 # install.packages("rfm")
@@ -78,4 +80,13 @@ segment <- rfm_segment(rfm_res,
 
 table(segment$segment)
 ```
+
+
+# Initial Analysis
+
+I first sum the total amount of spending on fruits, meat, fish, sweet and gold reffered as expenditure, and examine how customers' expenditure varies by their education, income, and marital status. 
+
+![](figures/figure1.png)
+
+In Figure 1, we can see that customers' expenditure roughly increases as their income increases, but there are some outliers at high income values. The expenditure of customers with undergraduate degree seems to be slightly lower than that of customers with postgraduate degree. Also, customers without any child have much higher expenditure than those who have childs, but customers' expenditure does not differ much by their marital status.  
 
