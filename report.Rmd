@@ -6,7 +6,7 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r, include=FALSE}
@@ -28,4 +28,54 @@ I first sum the total amount of spending on fruits, meat, fish, sweet and gold r
 ![](figures/figure1.png)
 
 In Figure 1, we can see that customers' expenditure roughly increases as their income increases, but there are some outliers at high income values. The expenditure of customers with undergraduate degree seems to be slightly lower than that of customers with postgraduate degree. Also, customers without any child have much higher expenditure than those who have childs, but customers' expenditure does not differ much by their marital status.  
+
+
+# RFM Analysis
+
+```{r}
+# install.packages("rfm")
+library(rfm)
+data$num_of_purchases <- data$numcatalogpurchases+data$numstorepurchases+data$numwebpurchases
+
+last_day <- as.Date("2014-10-04")
+data$latest_visit_date = last_day-data$recency
+data <- data %>% select(id, latest_visit_date, num_of_purchases, expenditure)
+
+```
+
+
+```{r}
+rfm_res = rfm_table_customer_2(data = data, customer_id = id, n_transactions = num_of_purchases, latest_visit_date = latest_visit_date, total_revenue = expenditure, analysis_date = last_day)
+
+rfm_heatmap(rfm_res) 
+```
+
+
+```{r}
+# label the various segments
+segment_names <- c("Champions", "Loyal Customers", "Potential Loyalist",
+  "New Customers", "Promising", "Need Attention", "About To Sleep",
+  "At Risk", "Can't Lose Them", "Lost")
+
+# set the upper and lower bounds for recency, frequency, and monetary for the above segments
+recency_lower <- c(4, 2, 3, 4, 3, 2, 2, 1, 1, 1)
+recency_upper <- c(5, 5, 5, 5, 4, 3, 3, 2, 1, 2)
+frequency_lower <- c(4, 3, 1, 1, 1, 2, 1, 2, 4, 1)
+frequency_upper <- c(5, 5, 3, 1, 1, 3, 2, 5, 5, 2)
+monetary_lower <- c(4, 3, 1, 1, 1, 2, 1, 2, 4, 1)
+monetary_upper <- c(5, 5, 3, 1, 1, 3, 2, 5, 5, 2)
+
+# use the segments and the bounds to categorize customers
+segment <- rfm_segment(rfm_res,
+                       segment_names,
+                       recency_lower,
+                       recency_upper,
+                       frequency_lower, 
+                       frequency_upper, 
+                       monetary_lower,
+                       monetary_upper)
+
+
+table(segment$segment)
+```
 
