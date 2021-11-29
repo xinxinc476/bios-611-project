@@ -4,6 +4,7 @@ clean:
 	rm -f derived_data/*
 	rm -f figures/*
 	rm -f report.pdf
+	rm -f Rplots.pdf
 
 # derived data
 # data cleaning:
