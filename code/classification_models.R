@@ -66,3 +66,38 @@ res["POR", ] = colMeans(acc_por)
 
 
 
+# Quadratic Discriminant Analysis (QDA)
+acc_qda = matrix(NA, nrow = length(folds), ncol = 6)
+colnames(acc_qda) = colnames(res)
+for (i in 1:length(folds)) {
+  testIndex = folds[[i]]
+  qda <- qda(expend_cate~., data = d, subset = (1:dim(d)[1])[-testIndex])
+  pred = predict(qda, newdata = d[testIndex, ])
+  acc_qda[i, ] = acc(pred$class, d$expend_cate[testIndex])
+}
+
+res["QDA", ] = colMeans(acc_qda)
+
+
+
+# K-Nearest Neighbors (KNN) with k = 15
+library(class)
+d_num = d %>% mutate(education = as.numeric(education), marital_status=as.numeric(marital_status))
+X = as.matrix(scale(d_num[, -7]))
+Y = d_num$expend_cate
+
+acc_knn = matrix(NA, nrow = length(folds), ncol = 6)
+colnames(acc_knn) = colnames(res)
+
+set.seed(10000)
+for (i in 1:length(folds)) {
+  testIndex = folds[[i]]
+  pred = knn(X[-testIndex, ], X[testIndex, ], Y[-testIndex], k = 15)
+  acc_knn[i, ] = acc(pred, Y[testIndex])
+}
+
+res["KNN", ] = colMeans(acc_knn)
+
+
+
+
