@@ -6,6 +6,14 @@ clean:
 	rm -f report.pdf
 	rm -f Rplots.pdf
 
+# report
+report.pdf:\
+ derived_data/marketing_campaign_clean.csv\
+ figures/figure1.png\
+ code/classification_models.R
+ report.Rmd
+	Rscript -e "rmarkdown::render('report.Rmd')"
+ 
 # derived data
 # data cleaning:
 # remove NA values and unreasonable values in income and age
@@ -22,10 +30,4 @@ figures/figure1.png:\
  code/plot.R code/utils.R
 	Rscript code/plot.R
 
-# report
-report.pdf:\
- derived_data/marketing_campaign_clean.csv\
- figures/figure1.png\
- report.Rmd
-	Rscript -e "rmarkdown::render('report.Rmd')"
- 
+
