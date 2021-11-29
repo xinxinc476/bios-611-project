@@ -10,7 +10,7 @@ clean:
 report.pdf:\
  derived_data/marketing_campaign_clean.csv\
  figures/figure1.png\
- code/classification_models.R
+ code/classification_models.R\
  report.Rmd
 	Rscript -e "rmarkdown::render('report.Rmd')"
  
