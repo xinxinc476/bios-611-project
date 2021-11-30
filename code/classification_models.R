@@ -100,4 +100,53 @@ res["KNN", ] = colMeans(acc_knn)
 
 
 
+# Support Vector Machine (SVM)
+library(e1071)
+acc_svm = matrix(NA, nrow = length(folds), ncol = 6)
+colnames(acc_svm) = colnames(res)
 
+set.seed(1)
+for (i in 1:length(folds)) {
+  testIndex = folds[[i]]
+  fit_svm = svm(expend_cate~., data = d[-testIndex, ])
+  pred = predict(fit_svm, newdata=d[testIndex, ])
+  acc_svm[i, ] = acc(pred, d$expend_cate[testIndex])
+}
+
+res["SVM", ] = colMeans(acc_svm)
+
+
+
+# Random Forests (RF)
+library(randomForest)
+acc_rf = matrix(NA, nrow = length(folds), ncol = 6)
+colnames(acc_rf) = colnames(res)
+
+set.seed(1)
+for (i in 1:length(folds)) {
+  testIndex = folds[[i]]
+  fit_rf = randomForest(expend_cate~., data=d, subset = (1:dim(d)[1])[-testIndex], mtry=6)
+  pred = predict(fit_rf, newdata=d[testIndex, ])
+  acc_rf[i, ] = acc(pred, d$expend_cate[testIndex])
+}
+
+res["RF", ] = colMeans(acc_rf)
+
+
+
+# Naive Bayes (NB)
+acc_nb = matrix(NA, nrow = length(folds), ncol = 6)
+colnames(acc_nb) = colnames(res)
+
+set.seed(100)
+for (i in 1:length(folds)) {
+  testIndex = folds[[i]]
+  fit_nb = naiveBayes(expend_cate~. , data = d[-testIndex, ])
+  pred = predict(fit_nb, newdata=d[testIndex, ])
+  acc_nb[i, ] = acc(pred, d$expend_cate[testIndex])
+}
+
+res["NB", ] = colMeans(acc_nb)
+
+ensure_directory('derived_data')
+saveRDS(res, 'derived_data/res_models.rds')
