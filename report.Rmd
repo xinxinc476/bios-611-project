@@ -82,11 +82,24 @@ table(segment$segment)
 ```
 
 
-# Initial Analysis
+# Prediction of Expenditure
 
-I first sum the total amount of spending on fruits, meat, fish, sweet and gold reffered as expenditure, and examine how customers' expenditure varies by their education, income, and marital status. 
+I sum the amount of money spent on each of fruits, meat, fish, sweet and gold (the total amount is referred as expenditure), and examine how customers' expenditure varies by their education level, income, and marital status. 
 
 ![](figures/figure1.png)
 
 In Figure 1, we can see that customers' expenditure roughly increases as their income increases, but there are some outliers at high income values. The expenditure of customers with undergraduate degree seems to be slightly lower than that of customers with postgraduate degree. Also, customers without any child have much higher expenditure than those who have childs, but customers' expenditure does not differ much by their marital status.  
 
+
+I select the following variables to predict expenditure. 
+
+```{r}
+library(knitr)
+res <- readRDS(file = 'derived_data/res_models.rds')
+
+kable(res, caption = 'Model Prediction Accuracy Comparison')
+```
+
+# Future Direction
+
+Here we only analyze the total expenditure. 
