@@ -39,9 +39,7 @@ The variable "days_enrollment" is the number of days between the date of custome
 
 
 
-# Method
-
-## RFM Analysis
+# RFM Analysis
 
 Next, I conduct a RFM Analysis to segment customers based on how recently a customer made a purchase (recency), how often a customer makes a purchase (frequency), and how much money a customer has spent on purchases (monetary value). Table 1 lists the features we consider in this analysis. The variable "latest_visit_date" is computed via subtracting the values of the variable recency (which is the number of days since the customer's last purchase) from the date 10/04/2014. The values of the variables "latest_visit_date", "num_of_purchases", "expenditure" represent recency, frequency, and monetary value, respectively.
 
@@ -122,7 +120,7 @@ kable(top5cate, col.names = c("Segment", "Percentage (%)"), caption = "Top 5 seg
 
 
 
-## Prediction of Expenditure
+# Prediction of Expenditure
 
 In addition to the RFM analysis, I try to predict the total amount of money spent on fruits, meat, fish, sweet and gold (the expenditure variable). Table 4 lists the variables we consider in this analysis.
 
@@ -142,13 +140,19 @@ I first examine how customers' expenditure varies by their income, education lev
 
 By the figure above, we can see that customers' expenditure roughly increases as their income increases, but there are some outliers at high income values. The expenditure of customers with undergraduate degree seems to be slightly lower than that of customers with postgraduate degree. Also, customers without any child have much higher expenditure than those who have childs, but customers' expenditure does not differ much by their marital status.  
 
- 
+
+Instead of predicting the numeric values of the total expenditure, I convert the expenditure variable into a nominal variable with 5 levels: <=100, 100-500, 500-1000, 1000-1500, >1500. Next, I use different classification methods to predict expenditure levels based on the customers’ education level, marital status, income, age, days since enrollment with the company, and number of childs. The models considered are proportional odds (POR) model, quadratic discriminant analysis (QDA), k-nearest neighbors (KNN) with k = 15, support vector machine (SVM), random forests (RF), and naive bayes (NB). To compare these models, I evaluate the prediction accuracy of each model using 10-folds cross-validation method. Table 5 lists the overall prediction accuracy and the accuracy for predicting each expenditure level from different models.
 
 ```{r}
 res <- readRDS(file = 'derived_data/res_models.rds')
 
-kable(res, caption = 'Model Prediction Accuracy Comparison')
+kable(round(res*100, 2), caption = 'Model prediction accuracy (%) comparison')
 ```
+
+
+By Table 5, we can see that the overall accuracy for each model is relatively low, only about $55 \% \sim 65 \%$. The random forests (RF) model and the proportional odds (POR) model appear to have the highest overall accuracy. All the models seem to have good prediction accuracy on the first level ('<=100') of the expenditure variable but perform poorly on the rest levels. 
+
+
 
 # Future Direction
 
