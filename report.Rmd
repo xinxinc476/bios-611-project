@@ -38,19 +38,20 @@ In terms of data cleaning, there are 24 missing values in the income column. Als
 The variable "days_enrollment" is the number of days between the date of customer's enrollment with the company and 10/04/2014. The variable "num_childs" is the sum of the number of children and the number of teenagers in customer's household. The marital status of the customers is regrouped into two categories: previous martial status values such as "Absurd","Divorced","Single","Widow", and "YOLO" are categorized as "Alone"; "Married" values are renamed as "Together". The education of the customers is also regrouped into categories: values like "2n Cycle" and "Basic" are categorized as "Undergraduate", while values like "Graduation","Master", and "PhD" are categorized as "Postgraduate".
 
 
+
 # Method
 
 ## RFM Analysis
 
-Next, I conduct a RFM Analysis to segment customers based on how recently a customer made a purchase (recency), how often a customer makes a purchase (frequency), and how much money a customer has spent on purchases (monetary value). Table 1 lists the features we consider in this analysis. The variable "latest_visit_date" is computed via subtracting the values of the variable recency (which is the number of days since the customer's last purchase) from the date 2014/10/04. The values of the variables "latest_visit_date", "num_of_purchases", "expenditure" represent recency, frequency, and monetary value, respectively.
+Next, I conduct a RFM Analysis to segment customers based on how recently a customer made a purchase (recency), how often a customer makes a purchase (frequency), and how much money a customer has spent on purchases (monetary value). Table 1 lists the features we consider in this analysis. The variable "latest_visit_date" is computed via subtracting the values of the variable recency (which is the number of days since the customer's last purchase) from the date 10/04/2014. The values of the variables "latest_visit_date", "num_of_purchases", "expenditure" represent recency, frequency, and monetary value, respectively.
 
 ```{r, include=FALSE}
-meta = data.frame(c("id: the customer's unique identifier", "latest_visit_date: the date of the customer's latest visit", "num_of_purchases: the total number of purchases made in stores, through the company's website and using a catalogue", "expenditure:the total amount of money spent on fruits, meat, fish, sweet and gold")) %>% as_tibble()
+meta = data.frame(c("latest_visit_date: the date of the customer's latest visit", "num_of_purchases: the total number of purchases made in stores, through the company's website and using a catalogue", "expenditure:the total amount of money spent on fruits, meat, fish, sweet and gold")) %>% as_tibble()
 ```
 
 
 ```{r}
-kable(meta, caption = 'List of variables used', col.names = "Variable")
+kable(meta, caption = 'List of variables used in RFM analysis', col.names = "Variable")
 ```
 
 Each of the variables "latest_visit_date", "num_of_purchases", "expenditure" is assigned a numeric score (ranged from 1 to 5) referred as recency score, frequency score, and monetary score, accordingly. Customers with more recent purchases have higher recency scores. Similarly, customers with higher purchase frequency have higher frequency scores, and customers who spent larger amount of money have higher monetary scores. In all, higher scores usually represent better customers. The ideal customer would have a high score in each factor. Then I generate the RFM score by concatenating these three scores into a single value. For example, a customer with recency score "1", frequency score "2", and monetary score "3" will have a RFM score "123". 
@@ -59,8 +60,6 @@ The heat map below shows how the average monetary values vary for different rece
 
 ![](figures/figure_heatmap.png)
 
-
-I 
 
 ```{r, include=FALSE}
 library(rfm)
@@ -96,21 +95,54 @@ segment <- rfm_segment(rfm_res,
 ```
 
 
+Based on the RFM scores, I segment customers into different categories. These categories are not fixed but can be adjusted to satisfy different needs. As a reference, I use the categories defined in the R package "RFM". Table 2 lists the bounds for each category. 
+
+```{r, include=FALSE}
+meta = data.frame("Segment"=c("Champions", "Loyal Customers", "Potential Loyalist", "New Customers", "Promising", "Need Attention", "About to Sleep", "At Risk", "Can't Lose Them", "Hibernating", "Lost"), "R_score"=c("4-5", "2-5", "3-5", "4-5", "3-4", "2-3", "2-3", "<=2", "<=1", "1-2", "<=2"), "F_score"=c("4-5", "3-5", "1-3", "<=1", "<=1", "2-3", "<=2", "2-5", "4-5", "1-2", "<=2"), "M_score"=c("4-5", "3-5", "1-3", "<=1", "<=1", "2-3", "<=2", "2-5", "4-5", "1-2", "<=2")) %>% as_tibble()
+```
+
 ```{r}
+kable(meta, caption = 'Segment definition')
 table(segment$segment)
 ```
 
 
+By Table 3, we can see that top 5 segments (in terms of the percentage of customers in each segment) are "Loyal Customers" (customers who spend a good amount and bought frequently), "Potential Loyalist" (recent customers who spent a good amount and bought more than once), "At Risk" (customers who spent a good amount and purchased often but long time ago), "Champions" (customers with highest recency, frequency and monetary scores), "Lost" (customers with lowest recency, frequency and monetary scores).
+
+```{r, include=FALSE}
+res_seg = sort(round(table(segment$segment)/dim(data)[1]*100, 2), decreasing = TRUE)
+
+top5cate = data.frame("Segment"=names(res_seg)[1:5], "Percentage (%)"=as.vector(res_seg[1:5])) %>% as_tibble()
+```
+
+
+```{r}
+kable(top5cate, col.names = c("Segment", "Percentage (%)"), caption = "Top 5 segments in the data")
+```
+
+
+
 ## Prediction of Expenditure
 
-I sum the amount of money spent on each of fruits, meat, fish, sweet and gold (the total amount is referred as expenditure), and examine how customers' expenditure varies by their education level, income, and marital status. 
+In addition to the RFM analysis, I try to predict the total amount of money spent on fruits, meat, fish, sweet and gold (the expenditure variable). Table 4 lists the variables we consider in this analysis.
+
+```{r, include=FALSE}
+meta = data.frame(c("education: the customer's education level, either 'Undergraduate' or 'Postgraduate'", "marital_status: the customer's marital status, either 'Alone' or 'Together'", "income: the customer's yearly household income", "age: the customer's age (from birth year to 2014)", "days_enrollment: the number of days between the date of customer's enrollment with the company and the date 10/04/2014", "num_childs: the number of children and teenagers in the customer's household (sum of the variables 'Kidhome' and 'Teenhome')", "expenditure:the total amount of money spent on fruits, meat, fish, sweet and gold")) %>% as_tibble()
+```
+
+
+```{r}
+kable(meta, caption = 'List of variables used in prediction of expenditure', col.names = "Variable")
+```
+
+
+I first examine how customers' expenditure varies by their income, education level, marital status, and number of childs. 
 
 ![](figures/figure2.png)
 
-In Figure 2, we can see that customers' expenditure roughly increases as their income increases, but there are some outliers at high income values. The expenditure of customers with undergraduate degree seems to be slightly lower than that of customers with postgraduate degree. Also, customers without any child have much higher expenditure than those who have childs, but customers' expenditure does not differ much by their marital status.  
+By the figure above, we can see that customers' expenditure roughly increases as their income increases, but there are some outliers at high income values. The expenditure of customers with undergraduate degree seems to be slightly lower than that of customers with postgraduate degree. Also, customers without any child have much higher expenditure than those who have childs, but customers' expenditure does not differ much by their marital status.  
 
-
-I select the following variables to predict expenditure. 
+ 
 
 ```{r}
 res <- readRDS(file = 'derived_data/res_models.rds')
