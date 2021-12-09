@@ -1,4 +1,5 @@
 library(tidyverse)
+source("code/utils.R")
 
 data <- read.csv('derived_data/marketing_campaign_clean.csv') %>% as_tibble()
 data$expenditure <- data$mntwines+data$mntfruits+data$mntmeatproducts+data$mntfishproducts+data$mntsweetproducts+data$mntgoldprods
