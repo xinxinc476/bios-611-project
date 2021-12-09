@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(ggplot2)
 library(gridExtra)
+library(knitr)
 ```
 
 ```{r, include=FALSE}
@@ -41,29 +42,35 @@ The variable "days_enrollment" is the number of days between the date of custome
 
 ## RFM Analysis
 
-RFM Analysis is often used to segment customers based on how recently a customer made a purchase (recency), how often a customer makes a purchase (frequency), and how much money a customer has spent on purchases (monetary value).   
+Next, I conduct a RFM Analysis to segment customers based on how recently a customer made a purchase (recency), how often a customer makes a purchase (frequency), and how much money a customer has spent on purchases (monetary value). Table 1 lists the features we consider in this analysis. The variable "latest_visit_date" is computed via subtracting the values of the variable recency (which is the number of days since the customer's last purchase) from the date 2014/10/04. The values of the variables "latest_visit_date", "num_of_purchases", "expenditure" represent recency, frequency, and monetary value, respectively.
+
+```{r, include=FALSE}
+meta = data.frame(c("id: the customer's unique identifier", "latest_visit_date: the date of the customer's latest visit", "num_of_purchases: the total number of purchases made in stores, through the company's website and using a catalogue", "expenditure:the total amount of money spent on fruits, meat, fish, sweet and gold")) %>% as_tibble()
+```
 
 
 ```{r}
-# install.packages("rfm")
+kable(meta, caption = 'List of variables used', col.names = "Variable")
+```
+
+Each of the variables "latest_visit_date", "num_of_purchases", "expenditure" is assigned a numeric score (ranged from 1 to 5) referred as recency score, frequency score, and monetary score, accordingly. Customers with more recent purchases have higher recency scores. Similarly, customers with higher purchase frequency have higher frequency scores, and customers who spent larger amount of money have higher monetary scores. In all, higher scores usually represent better customers. The ideal customer would have a high score in each factor. Then I generate the RFM score by concatenating these three scores into a single value. For example, a customer with recency score "1", frequency score "2", and monetary score "3" will have a RFM score "123". 
+
+The heat map below shows how the average monetary values vary for different recency and frequency scores. We can see that monetary value is concentrated in regions with high frequency scores. In other words, a large portion of the monetary value is concentrated around frequent shoppers. 
+
+![](figures/figure_heatmap.png)
+
+
+I 
+
+```{r, include=FALSE}
 library(rfm)
 data$num_of_purchases <- data$numcatalogpurchases+data$numstorepurchases+data$numwebpurchases
 
 last_day <- as.Date("2014-10-04")
 data$latest_visit_date = last_day-data$recency
-data <- data %>% select(id, latest_visit_date, num_of_purchases, expenditure)
+data_rfm <- data %>% select(id, latest_visit_date, num_of_purchases, expenditure)
+rfm_res = rfm_table_customer_2(data = data_rfm, customer_id = id, n_transactions = num_of_purchases, latest_visit_date = latest_visit_date, total_revenue = expenditure, analysis_date = last_day)
 
-```
-
-
-```{r}
-rfm_res = rfm_table_customer_2(data = data, customer_id = id, n_transactions = num_of_purchases, latest_visit_date = latest_visit_date, total_revenue = expenditure, analysis_date = last_day)
-
-rfm_heatmap(rfm_res) 
-```
-
-
-```{r}
 # label the various segments
 segment_names <- c("Champions", "Loyal Customers", "Potential Loyalist",
   "New Customers", "Promising", "Need Attention", "About To Sleep",
@@ -86,8 +93,10 @@ segment <- rfm_segment(rfm_res,
                        frequency_upper, 
                        monetary_lower,
                        monetary_upper)
+```
 
 
+```{r}
 table(segment$segment)
 ```
 
@@ -96,15 +105,14 @@ table(segment$segment)
 
 I sum the amount of money spent on each of fruits, meat, fish, sweet and gold (the total amount is referred as expenditure), and examine how customers' expenditure varies by their education level, income, and marital status. 
 
-![](figures/figure1.png)
+![](figures/figure2.png)
 
-In Figure 1, we can see that customers' expenditure roughly increases as their income increases, but there are some outliers at high income values. The expenditure of customers with undergraduate degree seems to be slightly lower than that of customers with postgraduate degree. Also, customers without any child have much higher expenditure than those who have childs, but customers' expenditure does not differ much by their marital status.  
+In Figure 2, we can see that customers' expenditure roughly increases as their income increases, but there are some outliers at high income values. The expenditure of customers with undergraduate degree seems to be slightly lower than that of customers with postgraduate degree. Also, customers without any child have much higher expenditure than those who have childs, but customers' expenditure does not differ much by their marital status.  
 
 
 I select the following variables to predict expenditure. 
 
 ```{r}
-library(knitr)
 res <- readRDS(file = 'derived_data/res_models.rds')
 
 kable(res, caption = 'Model Prediction Accuracy Comparison')
