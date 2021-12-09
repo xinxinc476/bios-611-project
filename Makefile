@@ -24,8 +24,14 @@ derived_data/marketing_campaign_clean.csv:\
 	Rscript code/data_clean.R
 
 # figures
-# Figure1: expenditure vs. income, education, marital status, and # of childs
-figures/figure1.png:\
+# Figure1: heat map of the RFM scores
+figures/figure_heatmap.png:\
+ derived_data/marketing_campaign_clean.csv\
+ code/plot.R code/utils.R
+        Rscript code/plot.R
+
+# Figure2: expenditure vs. income, education, marital status, and # of childs
+figures/figure2.png:\
  derived_data/marketing_campaign_clean.csv\
  code/plot.R code/utils.R
 	Rscript code/plot.R
