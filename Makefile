@@ -9,8 +9,9 @@ clean:
 # report
 report.pdf:\
  derived_data/marketing_campaign_clean.csv\
- figures/figure1.png\
- code/classification_models.R\
+ derived_data/res_models.rds\
+ figures/figure_heatmap.png\
+ figures/figure2.png\
  report.Rmd
 	Rscript -e "rmarkdown::render('report.Rmd')"
  
@@ -23,17 +24,21 @@ derived_data/marketing_campaign_clean.csv:\
  code/data_clean.R code/utils.R
 	Rscript code/data_clean.R
 
+# store the prediction accuracy results from different models
+derived_data/res_models.rds:\
+ derived_data/marketing_campaign_clean.csv\
+ code/classification_models.R code/utils.R
+	Rscript code/classification_models.R
+
 # figures
 # Figure1: heat map of the RFM scores
 figures/figure_heatmap.png:\
  derived_data/marketing_campaign_clean.csv\
  code/plot.R code/utils.R
-        Rscript code/plot.R
+	Rscript code/plot.R
 
 # Figure2: expenditure vs. income, education, marital status, and # of childs
 figures/figure2.png:\
  derived_data/marketing_campaign_clean.csv\
  code/plot.R code/utils.R
 	Rscript code/plot.R
-
-
