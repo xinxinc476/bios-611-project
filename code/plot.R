@@ -15,7 +15,7 @@ data$latest_visit_date = last_day-data$recency
 data_rfm <- data %>% select(id, latest_visit_date, num_of_purchases, expenditure)
 rfm_res = rfm_table_customer_2(data = data_rfm, customer_id = id, n_transactions = num_of_purchases, latest_visit_date = latest_visit_date, total_revenue = expenditure, analysis_date = last_day)
 
-p <- rfm_heatmap(rfm_res, print_plot = FALSE) + labs(title = 'Figure 1: Heat map of the RFM values') 
+p <- rfm_heatmap(rfm_res, print_plot = FALSE)
 
 ensure_directory('figures')
 ggsave(file="figures/figure_heatmap.png", p, width = 5, height = 3, units = 'in', scale = 2) 
@@ -45,4 +45,4 @@ p_childs <- ggplot(data, aes(x=num_childs, y=expenditure, group = num_childs)) +
   labs(x = "number of children")
 
 g <- arrangeGrob(p_income, p_edu, p_mar, p_childs, nrow=2) 
-ggsave(file="figures/figure1.png", g, width = 5, height = 3, units = 'in', scale = 2) 
+ggsave(file="figures/figure2.png", g, width = 5, height = 3, units = 'in', scale = 2) 
