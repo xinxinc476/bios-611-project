@@ -51,4 +51,4 @@ Rscript code/shiny.R
 ```
 The Shiny app should be accessible on `localhost:8788` on your browser. 
 
-The Shiny app shows a clustering of the customers based on the number days they enrolled with the company (until 2014/12/31), their yearly household incomes, and their expenditures (the total amount spent on wine, fruits, meat, fish, sweets, and gold in 2012~2014). 
+The Shiny app shows a clustering of the customers based on the number days they enrolled with the company (until 10/04/2014), their yearly household incomes, and their expenditures (the total amount spent on wine, fruits, meat, fish, sweets, and gold in 2012~2014). 
