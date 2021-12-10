@@ -101,7 +101,6 @@ meta = data.frame("Segment"=c("Champions", "Loyal Customers", "Potential Loyalis
 
 ```{r}
 kable(meta, caption = 'Segment definition')
-table(segment$segment)
 ```
 
 
