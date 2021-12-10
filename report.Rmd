@@ -1,5 +1,6 @@
 ---
-title: "BIOS 611 Final Project"
+title: "Customer Personality Analysis"
+subtitle: "BIOS 611 Final Project"
 author: "Xinxin Chen"
 date: "12/09/2021"
 output: pdf_document
