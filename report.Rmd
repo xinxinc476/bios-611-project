@@ -1,7 +1,7 @@
 ---
-title: "BIOS 611 Project"
+title: "BIOS 611 Final Project"
 author: "Xinxin Chen"
-date: "10/22/2021"
+date: "12/09/2021"
 output: pdf_document
 ---
 
